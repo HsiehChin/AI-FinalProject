@@ -10,4 +10,3 @@ void final_scoring(int* house);
 bool check_end(int* house, int player);
 
 #endif // !CHIN_H_
-

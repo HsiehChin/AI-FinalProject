@@ -1,36 +1,39 @@
-#define _CRT_SECURE_NO_WARNINGS
+ï»¿#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <windows.h>
+#include <time.h>
 
 #include "chin.h"
 
-//#include "peipei.h"
+#include "peipei.h"
 //#include "yu.h"
 
 //change into {yu_no_system, pei_no_system, chin_no_system}
-static int(*play[3])(int *, int) = { chin_no_system, chin_no_system, chin_no_system};
+static int(*play[3])(int*, int) = { chin_no_system, pei_no_system, chin_no_system };
 
 int main() {
 	int house[14] = { 6,6,6,6,6,6,0,6,6,6,6,6,6,0 };
 	bool player0_move = true, player1_move = true;
 	int player0, player1, player0_action = -1, player1_action = -1;
 	char name[3][6] = { "yu", "pei", "chin" };
-	
-	/*-- choose player --*/ 
+
+	srand(time(NULL));
+
+	/*-- choose player --*/
 	printf("The first player is (0)yu or (1)pei or (2)chin? ");
 	scanf("%d", &player0);
 	printf("The second player is (0)yu or (1)pei or (2)chin? ");
 	scanf("%d", &player1);
 	printf("\n");
-	
+
 	while (1) {
-		
+
 		if (player0_move == true) {
 			player0_action = play[player0](house, 0);
 			show_house(house);
-			printf("%4s's turn to take action: %d\n\n",name[player0], player0_action);
+			printf("%4s's turn to take action: %d\n\n", name[player0], player0_action);
 			if (relocation(house, player0_action)) {
 				player1_move = false;
 			}
@@ -66,7 +69,7 @@ int main() {
 	else if (house[6] < house[13]) {//player1 win
 		printf("%4s win~~~~\n", name[player1]);
 	}
-	else {//¥­¤â
+	else {//Â¥Â­Â¤Ã¢
 		printf("The game between %s and %s ended in a draw\n", name[player0], name[player1]);
 	}
 
