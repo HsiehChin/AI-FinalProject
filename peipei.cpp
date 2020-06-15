@@ -5,12 +5,12 @@
 #include <limits.h>
 #include <time.h>
 
-void maxValue(int houses[], int turn, int depth, int depthMAX, int* mValue, int* action, int init_turn);
-void minValue(int houses[], int turn, int depth, int depthMAX, int* mValue, int* action, int init_turn);
-void compare(int houses[], int* mValue, int turn);
-bool check_end(int houses[], int turn);
-void final_scoring(int houses[]);
-bool relocation(int houses[], int pickedHouse);
+static void maxValue(int houses[], int turn, int depth, int depthMAX, int* mValue, int* action, int init_turn);
+static void minValue(int houses[], int turn, int depth, int depthMAX, int* mValue, int* action, int init_turn);
+static void compare(int houses[], int* mValue, int turn);
+static bool check_end(int houses[], int turn);
+static void final_scoring(int houses[]);
+static bool relocation(int houses[], int pickedHouse);
 int random_action(int houses[], int player);
 int find_not_empty(int houses[], int player);
 
@@ -290,24 +290,24 @@ static bool relocation(int houses[], int pickedHouse) {
 
 	while (count--) {
 		location++;
-		// 判斷不能放在對手的碗裡
+		// cannot be sowing in the opponent's bowl
 		if ((pickedHouse <= 5 && location == 13) || (pickedHouse >= 7 && location == 6)) {
 			count++;
 			continue;
 		}
 
-		// 先放好
+		// put
 		if (location > 13) {
 			location = 0;
 			houses[location] += 1;
-			flag = true; // 表示繞了一圈
+			flag = true; // no.13 bowl come back to no.1 bowl
 		}
 		else {
 			houses[location] += 1;
 		}
 	}
 
-	// 空捕獲
+	// empty capture
 	if (houses[location] == 1 && location != 13 && location != 6 && flag == false) {
 		if (pickedHouse <= 5 && location <= 5 && houses[12 - location] != 0) {
 			houses[location] -= 1;
@@ -344,5 +344,5 @@ static void show_house(int houses[]) {
 
 
 int pei_no_system(int houses[], int turn) {
-	return minimaxDecision(houses, turn, 10);
+	return minimaxDecision(houses, turn, 8);
 }
