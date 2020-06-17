@@ -8,10 +8,10 @@
 #include "chin.h"
 
 #include "peipei.h"
-//#include "yu.h"
+#include "yu.h"
 
 //change into {yu_no_system, pei_no_system, chin_no_system}
-static int(*play[3])(int*, int) = { chin_no_system, pei_no_system, chin_no_system };
+static int(*play[3])(int*, int) = { yu_no_system, pei_no_system, chin_no_system };
 
 int main() {
 	int house[14] = { 6,6,6,6,6,6,0,6,6,6,6,6,6,0 };
@@ -69,7 +69,7 @@ int main() {
 	else if (house[6] < house[13]) {//player1 win
 		printf("%4s win~~~~\n", name[player1]);
 	}
-	else {//¥­¤â
+	else {//in a draw
 		printf("The game between %s and %s ended in a draw\n", name[player0], name[player1]);
 	}
 
