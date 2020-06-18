@@ -11,7 +11,6 @@ static void compare(int houses[], int* mValue, int turn);
 static bool check_end(int houses[], int turn);
 static void final_scoring(int houses[]);
 static bool relocation(int houses[], int pickedHouse);
-// int random_action(int houses[], int player);
 int random_action(int houses[], int same_mvalue[], int array_length, int player);
 int find_not_empty(int houses[], int player);
 
@@ -20,7 +19,6 @@ int random_action(int houses[], int same_mvalue[], int array_length, int player)
 	int index;
 	int count = 0;
 	int result;
-
 
 	index = (rand() % array_length);
 
@@ -72,7 +70,8 @@ static void maxValue(int houses[], int turn, int depth, int depthMAX, int* mValu
 	int copy[14];
 	bool flag = check_end(houses, turn);
 	int all_mvalue[6] = { 0 };
-	int count = 0;
+	int count = 0, oppenent = 1;
+	int start = 0, end = 5;
 	for (int i = 0; i < 14; i++) {
 		copy[i] = houses[i];
 	}
@@ -80,77 +79,51 @@ static void maxValue(int houses[], int turn, int depth, int depthMAX, int* mValu
 
 	if (depth < depthMAX && flag == false) {
 		if (turn == 1) {
-			for (int i = 7; i <= 12; i++) {
+			start = 7;
+			end = 12;
+			oppenent = 0;
+		}
+		for (int i = start; i <= end; i++) {
+			if (copy[i] != 0) {
 				if (relocation(copy, i)) {
 					maxValue(copy, turn, depth + 2, depthMAX, &mValue_copy, action, init_turn);
 
 				}
 				else {
-					minValue(copy, 0, depth + 1, depthMAX, &mValue_copy, action, init_turn);
+					minValue(copy, oppenent, depth + 1, depthMAX, &mValue_copy, action, init_turn);
 				}
-
-				all_mvalue[i-7] = mValue_copy;
 
 				if (*mValue <= mValue_copy) {
 					*mValue = mValue_copy;
-					if (*mValue == mValue_copy) {
-						count++;
-					}
-				}
-				else {
 				}
 			}
+			if (turn == 1) {
+				all_mvalue[i - 7] = mValue_copy;
+			}
+			else {
+				all_mvalue[i] = mValue_copy;
+			}
+		}
 
-			int* same_mvalue = (int*)malloc(sizeof(int) * 6);
-			for (int j = 0; j < count; j++) {
-				if (all_mvalue[j] == *mValue) {
+		int* same_mvalue = (int*)malloc(sizeof(int) * 6);
+		for (int j = 0; j < 6; j++) {
+			if (all_mvalue[j] == *mValue) {
+				count++;
+				if (turn == 1) {
 					same_mvalue[j] = j + 7;
 				}
-			}
-
-			if (depth == 0) {
-				*action = random_action(houses,same_mvalue, count, 1);
-			}
-
-		}
-		else {
-			for (int i = 0; i <= 5; i++) {
-				if (relocation(copy, i)) {
-					maxValue(copy, turn, depth + 2, depthMAX, &mValue_copy, action, init_turn);
-				}
 				else {
-					minValue(copy, 1, depth + 1, depthMAX, &mValue_copy, action, init_turn);
-				}
-				all_mvalue[i] = mValue_copy;
-
-				if (*mValue <= mValue_copy) {
-					*mValue = mValue_copy;
-					if (*mValue == mValue_copy) {
-						count++;
-					}
-				}
-				else {
-				}
-			}
-
-
-			int* same_mvalue = (int*)malloc(sizeof(int) * 6);
-			for (int j = 0; j < count; j++) {
-				if (all_mvalue[j] == *mValue) {
 					same_mvalue[j] = j;
 				}
 			}
-
-			if (depth == 0) {
-				*action = random_action(houses, same_mvalue, count, 0);
-			}
+		}
+		if (depth == 0) {
+			*action = random_action(houses, same_mvalue, count, turn);
 		}
 	}
 	else {
 		compare(houses, mValue, init_turn);
 	}
-
-
 }
 
 static void minValue(int houses[], int turn, int depth, int depthMAX, int* mValue, int* action, int init_turn) {
@@ -158,7 +131,8 @@ static void minValue(int houses[], int turn, int depth, int depthMAX, int* mValu
 	int copy[14];
 	bool flag = check_end(houses, turn);
 	int all_mvalue[14] = { 0 };
-	int count = 0;
+	int count = 0, oppenent = 1;
+	int start = 0, end = 5;
 	for (int i = 0; i < 14; i++) {
 		copy[i] = houses[i];
 	}
@@ -170,70 +144,48 @@ static void minValue(int houses[], int turn, int depth, int depthMAX, int* mValu
 
 	if (depth < depthMAX && flag == false) {
 		if (turn == 1) {
-			for (int i = 7; i <= 12; i++) {
+			start = 7;
+			end = 12;
+			oppenent = 0;
+		}
+
+		for (int i = start; i <= end; i++) {
+			if (copy[i] != 0) {
 				if (relocation(copy, i)) {
 					maxValue(copy, turn, depth + 2, depthMAX, &mValue_copy, action, init_turn);
 				}
 				else {
-					minValue(copy, 0, depth + 1, depthMAX, &mValue_copy, action, init_turn);
+					minValue(copy, oppenent, depth + 1, depthMAX, &mValue_copy, action, init_turn);
 				}
+			}
+			if (turn == 1) {
 				all_mvalue[i - 7] = mValue_copy;
-
-
-				if (*mValue >= mValue_copy) {
-					*mValue = mValue_copy;
-					if (*mValue == mValue_copy) {
-						count++;
-					}
-				}
-				else {
-				}
+			}
+			else {
+				all_mvalue[i] = mValue_copy;
 			}
 
-
-			int* same_mvalue = (int*)malloc(sizeof(int) * 6);
-			for (int j = 0; j < count; j++) {
-				if (all_mvalue[j] == *mValue) {
-					same_mvalue[j] = j + 7;
-				}
-			}
-
-			if (depth == 0) {
-				*action = random_action(houses, same_mvalue, count, 1);
+			if (*mValue >= mValue_copy) {
+				*mValue = mValue_copy;
 			}
 		}
-		else {
-			for (int i = 0; i <= 5; i++) {
-				if (relocation(copy, i)) {
-					maxValue(copy, turn, depth + 2, depthMAX, &mValue_copy, action, init_turn);
+
+
+		int* same_mvalue = (int*)malloc(sizeof(int) * 6);
+		for (int j = 0; j < 6; j++) {
+			if (all_mvalue[j] == *mValue) {
+				count++;
+				if (turn == 1) {
+					same_mvalue[j] = j + 7;
 				}
 				else {
-					minValue(copy, 1, depth + 1, depthMAX, &mValue_copy, action, init_turn);
-				}
-
-				all_mvalue[i] = mValue_copy;
-
-				if (*mValue >= mValue_copy) {
-					*mValue = mValue_copy;
-					if (*mValue == mValue_copy) {
-						count++;
-					}
-				}
-				else {
-				}
-			}
-
-
-			int* same_mvalue = (int*)malloc(sizeof(int) * 6);
-			for (int j = 0; j < count; j++) {
-				if (all_mvalue[j] == *mValue) {
 					same_mvalue[j] = j;
 				}
 			}
+		}
 
-			if (depth == 0) {
-				*action = random_action(houses, same_mvalue, count, 0);
-			}
+		if (depth == 0) {
+			*action = random_action(houses, same_mvalue, count, turn);
 		}
 	}
 	else {
