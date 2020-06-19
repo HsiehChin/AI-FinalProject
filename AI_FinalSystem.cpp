@@ -6,11 +6,9 @@
 #include <time.h>
 
 #include "chin.h"
-
 #include "peipei.h"
 #include "yu.h"
 
-//change into {yu_no_system, pei_no_system, chin_no_system}
 static int(*play[3])(int*, int) = { yu_no_system, pei_no_system, chin_no_system };
 
 int main() {
