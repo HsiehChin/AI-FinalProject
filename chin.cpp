@@ -187,5 +187,5 @@ static int minimaxDecision(int house[], int turn, int depthMAX) {
 
 //return the action of next step
 int chin_no_system(int house[], int turn) {
-	return minimaxDecision(house, turn, 12);
+	return minimaxDecision(house, turn, 14);
 }
